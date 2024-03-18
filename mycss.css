@@ -1,0 +1,26 @@
+h1 {
+    color: blue;
+}
+.container {
+    height: 300px;
+    border: 2px solid teal;
+    margin: 200px;
+    position: relative;
+    overflow: auto;
+}
+.item {
+    width: 50px;
+    height: 240px;
+    border: 1px solid red;
+    position: static;
+}
+#item {
+    width: 50px;
+    height: 540px;
+    border: 1px solid green;
+}
+.sticky {
+    position: sticky;
+    top:0; 
+    left:0;
+}
