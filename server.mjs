@@ -3,7 +3,7 @@ import { createServer } from 'node:http';
 const hostname = '127.0.0.1';
 const port = 3000;
 
-const server = createServer((req, res) => {
+const server = createServer( async (req, res) => {
   console.log('Received request...', req.url, req.method);
   
   if(req.url == '/') {
@@ -25,15 +25,25 @@ const server = createServer((req, res) => {
       res.end('OK');
     }
     if(req.method == 'POST') {
-      // console.log(req.body());
-      console.log('post method...')
-      res.statusCode = 200;
-      res.setHeader('Content-Type', 'text/plain');
-      res.setHeader('Access-Control-Allow-Origin', "*");
-
-
-      res.end(JSON.stringify({surname: "KUMAR"}));
-      // console.log(res)
+      let data = '';
+      req.on('data', chunk => {
+        data += chunk;
+      });
+      req.on('end', () => {
+        try {
+          const userData = JSON.parse(data);
+          const {surname} = userData;
+          console.log('Surname...', surname);
+          res.statusCode = 200;
+          res.setHeader('Content-Type', 'text/plain');
+          res.setHeader('Access-Control-Allow-Origin', "*");
+          res.end(JSON.stringify({surname}));
+        } catch (e) {
+          console.error('Error parsing JSON: ', e.message);
+          res.writeHead(400, { 'Content-Type': 'text/plain'});
+          res.end('Invalid JSON data');
+        }
+      })
     }
   }
   
